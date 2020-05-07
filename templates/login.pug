@@ -7,12 +7,16 @@ html
         
         p WELCOME TO MAUSAMS HOME NEPAL
 
-            form(action="", method="POST" ).form-group 
-                label(for="userName") userName
-                input(type="text", placeholder="userName",name="userName").form-control
+            //- form(action="/auth/register", method="POST" ).form-group 
+            form(method="POST").form-group 
+                label(for="username") username
+                input(type="text", placeholder="username",name="username").form-control
                 label(for="password") password
                 input(type="pasword", placeholder="userName",name="password").form-control
                 input(type="submit",value="login").btn.btn-primary
                 p Dont have an account?
                 p register 
                 a(href="#") here
+
+
+

@@ -1,6 +1,5 @@
 //app/js bhaneko redirect matrai gardiney ho, k endpoint ako cha tesko adharma request-response cycle
 //lai redirect gardiney ho
-
 const express = require('express');
 const fileOp = require('./file');
 const app = express();     //app is entire express framework
@@ -11,26 +10,30 @@ const morgan = require('morgan');
 const port= 9090;
 const path = require('path');
 const pug = require('pug');
-app.set('port',7070);
+app.set('port',5050);
 app.set('view engine',pug);
 app.set('views',path.join(__dirname, 'templates'))
 //views bhanne key ma kun chai folderlai views ko directory banauney, views ko templating file kaha lagera rakhney
 
-
-
-
-
-
+const apiRoute = require('./routes/api.route');
 const authRoute = require('./controllers/auth.route');
 const userRoute = require('./controllers/user.route');
-const commentRoute = require('./controllers/comment.route');
-const notificationRoute = require('./controllers/notification.route');
-const messageRoute = require('./controllers/message.route');
-const reviewRoute = require('./controllers/review.route');
+// const commentRoute = require('./controllers/comment.route');
+// const notificationRoute = require('./controllers/notification.route');
+// const messageRoute = require('./controllers/message.route');
+// const reviewRoute = require('./controllers/review.route');
+
+//calling another file from mongoosedb expecting nothing
+require('./mongoosedb');
 
 //application level middlewares
 const checktoken = require('./middlewares/checktoken');
 const checkrole = require('./middlewares/checkrole');
+
+const authenticate = require('./middlewares/authenticate');
+const authorize = require('./middlewares/authorize');
+
+
 
 //loading third party middleware using morgan from npm js bata leraako
 app.use(morgan('dev'));   //dev is options type of morgan
@@ -60,14 +63,25 @@ app.use(express.urlencoded(
 // /auth bhanne endpoint ma authRoute bhanne middleware rakhyou;
 // app.use(checkToken); //hamiley auth gardaina ramro hudaina authmai garda
 // app.use(checkRole); //hamiley auth gardaina ramro hudaina authmai garda
+
+
+app.use('/api', apiRoute);
 app.use('/auth', authRoute);  //ROUTING LEVEL MIDDLEWARE
 // app.use('/comment', commentRoute);    //ROUTING LEVEL MIDDLEWARE
 // app.use('/review', reviewRoute);   
-// app.use('/user', userRoute);    
+app.use('/user', authenticate, authorize, userRoute);    
 // app.use('/notification', notificationRoute);    
 // app.use('/message', messageRoute);     
+// app.use('/admin', authenticate, authorize, messageRoute);
 
-//mathiko kunai pani req-rs fail bhayo bhane athawa unnames path ralhyo bhane execute 404 error
+
+
+
+
+
+
+
+//mathiko kunai pani req-res fail bhayo bhane athawa unnames path ralhyo bhane execute 404 error
 // app.use(function(req,res,next)
 // {
 //     console.log('404 error')
@@ -87,18 +101,18 @@ app.use('/auth', authRoute);  //ROUTING LEVEL MIDDLEWARE
 //     })
 // })
 
-// app.use(function(err,req,res,next)
-// {
-//     if(err)
-//     {
-//         console.log('I AM ERROR HANDLING MIDDLEWARE',err);
-//         res.json({
-//             msg: 'FROM ERR HANDLING MIDDLEWARE',
-//             status: err.status || 400 ,
-//             text: err.msg || 'something went wrong'
-//         });
-//     }
-// });
+app.use(function(err,req,res,next)
+{
+    if(err)
+    {
+        console.log('I AM ERROR HANDLING MIDDLEWARE',err);
+        res.json({
+            msg: 'FROM ERR HANDLING MIDDLEWARE',
+            status: err.status || 400 ,
+            text: err.msg || 'something went wrong'
+        });
+    }
+});
 
 
 // function checkLicense(req,res,next)
@@ -108,8 +122,6 @@ app.use('/auth', authRoute);  //ROUTING LEVEL MIDDLEWARE
 // console.log('blocked at middleware');
 // res.send('dadasd');
 // }
-
-
 
 
 //yo middleware ma jun request chaye get post aye pani execute huncha....
@@ -243,39 +255,6 @@ app.listen(app.get('port'),function(err,done)
 //         console.log('press ctrl + c to exit');
 //     }
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
