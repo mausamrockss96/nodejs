@@ -1,4 +1,5 @@
 module.exports = {
-    port: 5050,
-    jwtSecret : 'adajfdjfsjdfnjnfdajdjnd'
+    port: 9090,
+    jwtSecret : 'frgwrwerewrewetgsdgsdgdsfdsfsdfsdgsdfsdf',
+    
 }

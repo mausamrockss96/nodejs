@@ -5,42 +5,48 @@
 
 var jwt = require('jsonwebtoken');
 var config = require('./../configs/index');
-const userModel = require('./../models/users.model')
+// var config = require('./../configs');
+const UserModel = require('./../models/users.model')
 
 module.exports = function(req, res, next)
 {
     var token;
 
-    if(req.headers['x-access-token'])
+    if (req.headers['x-access-token'])
     {
-        token = req.headers['x-access-token'];
+        token = req.headers['x-access-token']
     }
     else if (req.headers['authorization'])
     {
-        token = req.headers['authorization'];
+        token = req.headers['authorization']
 
     }
     else if (req.headers['token'])
     {
-        token = req.headers['token'];
+        token = req.headers['token']
+
+    }
+    else if (req.query['token'])
+    {
+        token = req.query['token']
 
     }
     if(token)    //token sanga validate garne aba
     {
-            jwt.verify(token, config.jwtSecret,function (err,done)
+        jwt.verify(token, config.jwtSecret, function(err,done)
         {
-            if(err)
+            if (err)
             { 
                 return next(err);
             }
-        userModel.findById(done.id)
+        UserModel.findById(done.id)
         .exec(function(err, user)
         {
             if(err)
             {
                 return next(err);
             }
-            if(!user)
+            if (!user)
             {
                 return next({
                     msg: 'user removed from the system'
@@ -63,7 +69,7 @@ module.exports = function(req, res, next)
         })
         
     }
-    else{
+    else {
         next({
             msg: "token not provided"
         });

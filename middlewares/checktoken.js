@@ -1,6 +1,6 @@
 module.exports = function(req,res,next)
 {   
-    if (req.query.token == 'msam')
+    if (req.query.token == 'sammy')
     {
     return next();
 }

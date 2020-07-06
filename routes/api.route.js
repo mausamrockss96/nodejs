@@ -1,11 +1,15 @@
-// this is what we do in future while working
-
 const router = require('express').Router();
 const authenticate = require('./../middlewares/authenticate');
-const productRouter = require('./../components/products/routes/product.route');
+const authorize = require('./../middlewares/authorize');
+
+const productRouter= require('./../components/products/routes/product.route');
+const authRouter = require('./../controllers/auth.route');
+const userRouter = require('./../controllers/user.route');
 
 
+router.use('/product', authenticate, productRouter);
+router.use('/user', authenticate, authorize, userRouter);
+router.use('/auth', authRouter);
 
-router.use('/product', authenticate, productRouter);    //app.use garya jastai paucha, aba gayera main file app.js ma import garney
 
 module.exports = router;

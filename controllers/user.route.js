@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 // const dbConfig = require('./configs/db.config');
 const UserModel = require('./../models/users.model');   //from mongoosedb
-const map_user_req = require('./../helpers/map_user_request');
+const map_user_req = require('../helpers/map_user_request');
 
 
 

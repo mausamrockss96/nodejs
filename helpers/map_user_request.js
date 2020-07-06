@@ -1,8 +1,8 @@
 module.exports = function (obj1, obj2) {
        if (obj2.full_name)
               obj1.name = obj2.full_name;
-       if (obj2.email_address)
-              obj1.email = obj2.email_address;
+       if (obj2.email_address || obj2.email)
+              obj1.email = obj2.email_address || obj2.email;
        if (obj2.address)
               obj1.address = obj2.address;
        if (obj2.username)

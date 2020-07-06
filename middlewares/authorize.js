@@ -3,7 +3,7 @@
 
 module.exports = function(req, res, next)
 {
-if(req.loggedInUser.role !==1)  
+            if(req.loggedInUser.role !==1)  
             {
             next({
                 msg: 'you dont have the permission'

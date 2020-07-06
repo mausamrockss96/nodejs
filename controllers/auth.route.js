@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const UserModel = require('./../models/users.model');   //from mongoosedb
-const mapUser = require('./../helpers/map_user_request');
+const mapUser = require('../helpers/map_user_request');
 const passwordHash = require('password-hash');
 const jwt = require('jsonwebtoken');
-const config = require('./../configs/index');
+const config = require('./../configs');
 
 
 //For mongo db to be connected
@@ -20,14 +20,14 @@ router.get('/login',function(req,res,next)
 {   
     //res. render() function compiles your template (please don't use ejs), 
     //inserts locals there, and creates html output out of those two things.
-    res.render('login.pug',{
+    res.render('login.pug', { 
         msg: 'hi and welcome',
         text: 'you r warlmy welcome to node-js and express'
     })
 })
 
 //commented for password hashing
-
+   
 // router.post('/login',function(req,res,next)
 // {
 //     console.log('I AM HERE WHEN FORM IS SUBMITTED', req.body); 
@@ -98,9 +98,9 @@ router.get('/login',function(req,res,next)
 //         })
 
 
-router.post('/login',function(req,res,next)
+router.post('/login',function(req, res, next)
     {
-        // console.log('I AM HERE WHEN FORM IS SUBMITTED', req.body); 
+        console.log('I AM HERE WHEN FORM IS SUBMITTED', req.body); 
          //for mongoose
         UserModel.findOne({        //findOne coz object sanga treat gareko ho username euta sanga matra gari rako honi tesaile invalid bhaneko passwordlai
             username: req.body.username
@@ -108,28 +108,30 @@ router.post('/login',function(req,res,next)
        
         .then(function (user)
         {
-            console.log('user>>',user);
+            console.log('user>>', user);
             if(user)
             {   
                 var isMatched = passwordHash.verify(req.body.password, user.password)
                 if (isMatched)
                     {
-                        var token = jwt.sign({ name: user.username, id: user._id, role: user.role}, config.jwtSecret,
-                            {
-                               expiresIn: 60   //expire bhayepachi hami pheri login page ma redirect new token..
-                        });
+                        var token = jwt.sign({ id: user._id }, config.jwtSecret);
+                        // {
+                        //     expiresIn: 60
+                        // });
                         res.status(200).json({
                             user: user,
-                            token: token    //each and every login,not storing token just sending
+                            token: token  
+                            //each and every login,not storing token just sending
                         });
 
                      }
+                    
                      else
                      {
                         next({
 
                             msg: "invalid password" 
-})
+                    })
                   
               } 
              }
@@ -142,6 +144,7 @@ router.post('/login',function(req,res,next)
             }
         })
     
+
         .catch(function(err)
        
         {
@@ -151,25 +154,25 @@ router.post('/login',function(req,res,next)
 
      //removed for mongoose just for while....
     
-    // mongoClient.connect(connURL, function (err, client)
-    // {
-    //     if (err)
-    //     {   
-    //         return next(err);
-    //     }
-    //     var db = client.db(dbName);
-    //     db.collection(collectionName)
-    //     .find({username: req.body.username})
-    //     .toArray(function(err,done)
+//     mongoClient.connect(connURL, function (err, client)
+//     {
+//         if (err)
+//         {   
+//             return next(err);
+//         }
+//         var db = client.db(dbName);
+//         db.collection(collectionName)
+//         .find({username: req.body.username})
+//         .toArray(function(err,done)
         
-    //     {  
-    //         if(err)
-    //         {
-    //             return next(err);
-    //         }
-    //         res.json(done);
-    //     })
-    // })
+//         {  
+//             if(err)
+//             {
+//                 return next(err);
+//             }
+//             res.json(done);
+//         })
+//     })
 })
 
 router.put('/login',function(req,res,next)
@@ -198,18 +201,18 @@ router.put('/login',function(req,res,next)
 
 
 
-router.get('/register',function(req,res,next)
-{
-})
+// router.get('/register', function(req,res,next)
+// {
+// })
 
 router.post('/register', function (req, res, next)
 {   
     console.log('what comes in >>', req.body);
     
     var newUser = new UserModel({});
-    var newMappedUser = mapUser(newUser, req.body);
+    var newMappedUser = mapUser(newUser, req.body)
     
-    newMappedUser.password = passwordHash.generate(req.body.password);
+    newMappedUser.password=passwordHash.generate(req.body.password)
 
     // var newUser = new UserModel({}) ;    //database ko modelko euta instance banako
     // newUser.name = req.body.full_name;
@@ -225,9 +228,9 @@ router.post('/register', function (req, res, next)
     // newUser.phoneNumber = req.body.phoneNumber;
     //  console.log('new user>>',newUser)  //newuser bhaneko obj nai ho,instance ho maile banako model ko
 
-    newMappedUser.save(function(err,done)
+    newMappedUser.save(function(err, done)
     {
-        if(err){
+        if (err) {
             return next(err);
         }
         res.status(200).json(done);

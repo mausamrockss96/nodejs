@@ -1,9 +1,9 @@
 var multer = require('multer');
 
-//SIMPLE USAGE OF UPLOADING THE FILES
-// var upload = multer({
-//     dest: './uploads'
-// })
+// SIMPLE USAGE OF UPLOADING THE FILES
+var upload = multer({
+    dest: './uploads'
+})
 
 var myStorage = multer.diskStorage({
     filename: function (req, file, cb)
@@ -11,7 +11,7 @@ var myStorage = multer.diskStorage({
         //added Date() to avoid overwriting of two diff files with same name
         cb(null, new Date().getTime() + '-' + file.originalname);     // we keep null to avoid from error, err haina bhannalai
     },
-    destination: function (req, file,cb)
+    destination: function (req, file, cb)
     {
         cb(null, './uploads/images/');
 
