@@ -11,5 +11,4 @@ router.use('/product', authenticate, productRouter);
 router.use('/user', authenticate, authorize, userRouter);
 router.use('/auth', authRouter);
 
-
 module.exports = router;

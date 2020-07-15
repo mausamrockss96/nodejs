@@ -56,7 +56,8 @@ function insert(req, res, next)
     //yaha .query le return gareko promise handle bhai rako cha
     productQuery.insert(req.body)
     .then(function(data)
-    {
+    {   
+        req.myEvent.emit('product_data', data) ;
         res.status(200).json(data);
     })
     .catch(function (err)
@@ -137,18 +138,25 @@ function searchByGet(req, res, next)
 
     //req.query because hamiley get padhyachau nita get mata ta body audaina tesaile
 
-    var searchCondition = productQuery.map_product_request(condition,req.query)   
-    console.log('search Condition>>', searchCondition);
-     productQuery.find(searchCondition)   
-    .then(function(data)
+    // var searchCondition = productQuery.map_product_request(condition,req.query)   
+    // console.log('search Condition>>', searchCondition);
+    //  productQuery.find(searchCondition)   
+    // .then(function(data)
+    // {
+    //     res.status(200).json(data);
+    // }) 
+    // .catch(function (err)
+    // {
+    //     next(err);
+    // })
+    require('fs').readFile('sdasdsad', function(err, done)
     {
-        res.status(200).json(data);
-    }) 
-    .catch(function (err)
-    {
-        next(err);
+        if(err)
+        {
+            req.myEvent.emit('errors', err);
+        }
     })
-}
+} 
 
 
 function searchByPost(req, res, next)

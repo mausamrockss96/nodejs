@@ -4,17 +4,45 @@ const app = express();
 const morgan = require('morgan');
 const port= 9090;
 const path = require('path');
+const cors = require('cors');
+
 
 app.set('port',5050);
 
 const apiRoute = require('./routes/api.route');
 
-require('./mongoosedb');
+require('./db');      //mongoosedb
 
-const cors = require('cors');
-  
 
-``
+
+//event driven architecture
+var ev = require('events');
+const event = new ev.EventEmitter();     
+app.use(function(req, res, next) {
+    req.myEvent = event;
+    next();
+})
+
+//socket stuff
+const socket = require('socket.io');
+const { RSA_NO_PADDING } = require('constants');
+const { render } = require('pug');
+var io = socket(app.listen(9091));
+//socket ko client connect bhaisake pachi matra dekhincha
+io.on('connection', function (client)
+{
+    console.log('client connected to socket server');
+    client.on('hi', function (data)
+    {
+        console.log("data in hi>>", data);
+        client.emit('hello', 'hello from server');
+    })
+    client.on('new-msg', function  (data) {
+        client.emit('reply-msg', data);
+    })
+})
+
+
 
 app.use(morgan('dev'));  
 app.use(express.static('files'));
@@ -52,6 +80,21 @@ app.use(function(req,res,next)
     })
 })
 
+
+
+event.on('product_data', function (data)
+{
+    console.log('data>>>', data);
+})
+
+event.on('errors', function(errors)
+{
+    console.log('application errors>>', errors)
+})
+
+
+
+//Error Handling Middlewares
 app.use(function(err, req, res, next)
 {
     

@@ -37,7 +37,9 @@ const userSchema = new Schema({
         type: String
     },
     image: String,
-    country: String
+    country: String,
+    passwordResetToken: String,
+    passwordResetTokenExpiry: Date
 }, 
 {
     timestamps: true        //for the creation, updation and deletion datas in postman
