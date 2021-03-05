@@ -7,6 +7,8 @@ const jwt = require('jsonwebtoken');
 const config = require('./../configs'); 
 const nodemailer = require('nodemailer');
 const randomString = require('randomstring');
+const { PromiseProvider } = require('mongoose');
+const { setMaxListeners } = require('./../models/users.model');
 
 const sender = nodemailer.createTransport({
     service: 'Gmail',
@@ -15,6 +17,10 @@ const sender = nodemailer.createTransport({
         pass: 'javascript-88'
     }
 })
+
+
+
+
 
 
  //data aunu paryo object ma
@@ -31,7 +37,37 @@ function prepareMail(data)
         <p>Hi <strong>${data.name}</strong></p> 
         <p>We noticed that you are having problem logging into our web store.Please use the link below to reset your password, please note that this link will work within a day only</p>
         <p><a href = '${data.link}'>Click here to reset</a></p>
-        <p>If u didnot send the request to change your password kindly ignore this email.</p>
+        <p>If u didnot send the request to change
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        your password kindly ignore this email.</p>
         <p>Regards,</p>
         <p>Our Web Store</p>
         `
@@ -42,7 +78,10 @@ function prepareMail(data)
     return mailBody;
 }
 
+
+
     
+
 
 
 //For mongo db to be connected
